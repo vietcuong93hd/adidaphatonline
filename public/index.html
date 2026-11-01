@@ -1,0 +1,59 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>A Di Đà Phật Online</title>
+  <link rel="stylesheet" href="/css/live.css">
+</head>
+<body>
+  <main id="stage">
+    <p class="brand">A Di Đà Phật Online</p>
+
+    <svg class="altar" viewBox="-300 -300 600 600" aria-hidden="true">
+      <defs>
+        <path id="petal" d="M0 0 C-58 -60 -46 -150 0 -205 C46 -150 58 -60 0 0 Z"/>
+      </defs>
+      <circle class="halo" r="285"/>
+      <circle class="halo-ring" r="250"/>
+      <g class="lotus-back">
+        <use href="#petal" transform="translate(0 110) rotate(-72)"/>
+        <use href="#petal" transform="translate(0 110) rotate(-48)"/>
+        <use href="#petal" transform="translate(0 110) rotate(-24)"/>
+        <use href="#petal" transform="translate(0 110)"/>
+        <use href="#petal" transform="translate(0 110) rotate(24)"/>
+        <use href="#petal" transform="translate(0 110) rotate(48)"/>
+        <use href="#petal" transform="translate(0 110) rotate(72)"/>
+      </g>
+      <g class="lotus-front">
+        <use href="#petal" transform="translate(0 125) rotate(-54) scale(.8)"/>
+        <use href="#petal" transform="translate(0 125) rotate(-27) scale(.8)"/>
+        <use href="#petal" transform="translate(0 125) rotate(27) scale(.8)"/>
+        <use href="#petal" transform="translate(0 125) rotate(54) scale(.8)"/>
+        <use href="#petal" transform="translate(0 125) scale(.8)"/>
+      </g>
+    </svg>
+
+    <p id="total-niem" class="total">0</p>
+    <p class="label">câu niệm của cả phòng</p>
+
+    <div class="stats">
+      <p><strong id="total-huong">0</strong> nén hương</p>
+      <p><strong id="total-den">0</strong> đèn hoa đăng</p>
+    </div>
+
+    <div class="censer">
+      <div id="sticks" class="sticks"></div>
+      <div class="bowl"></div>
+    </div>
+
+    <p id="last" class="last"></p>
+    <p class="mantra">Nam mô A Di Đà Phật</p>
+    <p class="hint">Bình luận "Nam mô", "Thắp hương" hoặc "Cầu ..."</p>
+
+    <div id="lanterns" class="lanterns"></div>
+  </main>
+  <a id="admin-link" href="/admin">Điều khiển</a>
+  <script src="/js/live.js"></script>
+</body>
+</html>

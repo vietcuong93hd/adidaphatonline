@@ -1,0 +1,206 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Chùa A Di Đà Online</title>
+  <link rel="stylesheet" href="/css/game.css">
+  <script type="importmap">
+    { "imports": { "three": "/vendor/three/three.module.js" } }
+  </script>
+</head>
+<body>
+  <canvas id="scene"></canvas>
+
+  <details id="profile" class="panel top">
+    <summary id="form-title" class="form-title"></summary>
+    <p id="form-blurb" class="form-blurb"></p>
+    <p id="form-quote" class="form-quote"></p>
+    <div id="forms" class="forms" role="group" aria-label="Chọn linh vật"></div>
+    <label class="name-field">Tên của bạn
+      <input id="name" maxlength="20" autocomplete="off">
+    </label>
+  </details>
+
+  <div class="status panel">
+    <p id="status">Đang vào chùa…</p>
+    <p id="progress" class="progress"></p>
+  </div>
+  <p id="toast" class="toast" role="status" hidden></p>
+
+  <section id="break" class="panel break" hidden aria-label="3 phút giải lao">
+    <div id="break-pick">
+      <h2>3 phút giải lao</h2>
+      <p>Hôm nay bạn đang thế nào?</p>
+      <div id="break-wishes" class="break-wishes"></div>
+      <button id="break-cancel" class="ghost">Để sau</button>
+    </div>
+    <div id="break-run" hidden>
+      <p id="break-time" class="break-time">3:00</p>
+      <div class="breath-ring"></div>
+      <p id="break-breath">Hít vào</p>
+      <p class="form-blurb">Nam mô A Di Đà Phật</p>
+      <button id="break-stop" class="ghost">Kết thúc sớm</button>
+    </div>
+    <div id="break-done" hidden>
+      <h2>Xong rồi, về làm việc nhẹ nhàng nhé</h2>
+      <p id="break-line"></p>
+      <p id="break-count" class="form-blurb"></p>
+      <button id="break-close">Về làm việc</button>
+    </div>
+  </section>
+
+  <form id="wish-form" class="panel wish" hidden>
+    <label><span id="wish-label"></span>
+      <input id="wish-text" maxlength="80" autocomplete="off">
+    </label>
+    <button type="submit" id="wish-submit"></button>
+    <button type="button" id="wish-cancel" class="ghost">Thôi</button>
+  </form>
+
+  <p id="hint" class="hint">W A S D hoặc phím mũi tên để đi, kéo chuột để xoay, cuộn để phóng to</p>
+
+  <div id="joystick" class="joystick" aria-hidden="true"><div id="knob" class="knob"></div></div>
+  <section id="beads" class="focus-screen" hidden aria-label="Tràng hạt">
+    <button id="bead-back" class="back">← Quay lại</button>
+    <div id="bead-zone" class="bead-zone">
+      <svg class="mala" viewBox="0 0 400 520" role="img" aria-label="Tràng hạt 108 hạt">
+        <defs>
+          <radialGradient id="bead-wood" cx="35%" cy="30%" r="75%">
+            <stop offset="0" stop-color="#c98a55"/>
+            <stop offset=".45" stop-color="#7a4221"/>
+            <stop offset="1" stop-color="#3a1c0c"/>
+          </radialGradient>
+          <radialGradient id="bead-gold" cx="35%" cy="30%" r="75%">
+            <stop offset="0" stop-color="#fff0c4"/>
+            <stop offset=".5" stop-color="#e6b04a"/>
+            <stop offset="1" stop-color="#8a5a18"/>
+          </radialGradient>
+          <radialGradient id="bead-jade" cx="35%" cy="30%" r="75%">
+            <stop offset="0" stop-color="#d7f2dc"/>
+            <stop offset=".5" stop-color="#4fa877"/>
+            <stop offset="1" stop-color="#1c5a42"/>
+          </radialGradient>
+        </defs>
+        <circle class="mala-cord" cx="200" cy="200" r="178"/>
+        <g class="mala-tassel">
+          <path d="M200 378v28"/>
+          <path class="mala-threads" d="M186 432l-10 74h48l-10-74z"/>
+          <path class="mala-threads-line" d="M191 436l-6 66M200 436v68M209 436l6 66"/>
+        </g>
+        <circle cx="200" cy="420" r="15" fill="url(#bead-gold)"/>
+        <g id="bead-ring"></g>
+        <text id="bead-count" class="mala-count" x="200" y="202">0</text>
+        <text class="mala-total" x="200" y="236">/ 108</text>
+        <text id="bead-rounds" class="mala-rounds" x="200" y="268"></text>
+      </svg>
+    </div>
+    <p class="focus-hint">Chạm hoặc vuốt xuống để lần hạt, vừa lần vừa niệm "Nam mô A Di Đà Phật"</p>
+  </section>
+
+  <section id="chant" class="focus-screen" hidden aria-label="Tụng kinh">
+    <button id="chant-back" class="back">← Quay lại</button>
+    <div class="chant-body">
+      <div id="chant-tabs" class="chant-tabs"></div>
+      <p id="chant-note" class="chant-note"></p>
+      <div id="chant-lines" class="chant-lines"></div>
+      <button id="chant-fish" class="chant-fish" aria-label="Gõ mõ, sang dòng tiếp theo"></button>
+    </div>
+    <p id="chant-progress" class="chant-progress"></p>
+    <div class="chant-options">
+      <label><input id="chant-voice" type="checkbox"> Giọng đọc</label>
+      <p id="chant-voice-note" hidden>Máy này chưa có giọng tiếng Việt</p>
+      <label><input id="chant-auto" type="checkbox"> Mõ tự động</label>
+      <label>Nhịp <input id="chant-tempo" type="range" min="1" max="5" step="1" value="3"></label>
+    </div>
+  </section>
+
+  <aside id="spot-card" class="panel spot-card" hidden>
+    <p id="spot-name" class="form-title"></p>
+    <p id="spot-text" class="form-blurb"></p>
+  </aside>
+
+  <section id="map" class="panel map" hidden aria-label="Bản đồ chùa">
+    <h2>Bản đồ chùa</h2>
+    <div id="map-list" class="map-list"></div>
+    <button id="map-close" class="ghost">Đóng</button>
+  </section>
+
+  <button id="date-chip" class="date-chip" aria-label="Mở lịch âm dương"></button>
+
+  <section id="calendar" class="panel map" hidden aria-label="Lịch âm dương">
+    <div class="calendar-head">
+      <button id="calendar-prev" aria-label="Tháng trước">‹</button>
+      <h2 id="calendar-title"></h2>
+      <button id="calendar-next" aria-label="Tháng sau">›</button>
+    </div>
+    <div id="calendar-grid" class="calendar-grid"></div>
+    <div id="calendar-detail" class="calendar-detail"></div>
+    <button id="calendar-close">Đóng</button>
+  </section>
+
+  <section id="music-panel" class="panel map" hidden aria-label="Nhạc nền">
+    <h2>Nhạc nền</h2>
+    <div id="music-list" class="music-list"></div>
+    <label class="music-volume">Âm lượng
+      <input id="music-volume" type="range" min="0" max="1" step="0.05">
+    </label>
+    <button id="music-close">Đóng</button>
+    <p class="credit">Tiếng chuông: chùa Chōmei-ji, ghi âm bởi <a href="https://commons.wikimedia.org/wiki/File:Bonsyou5599.ogg" target="_blank" rel="noopener">Jnn</a>, giấy phép <a href="https://creativecommons.org/licenses/by/2.1/jp/deed.vi" target="_blank" rel="noopener">CC BY 2.1 JP</a></p>
+  </section>
+
+  <section id="photo" class="panel photo" hidden aria-label="Ảnh chia sẻ">
+    <img id="photo-preview" alt="Thẻ ảnh hôm nay lên chùa">
+    <div class="photo-actions">
+      <button id="photo-share">Chia sẻ</button>
+      <button id="photo-save">Tải ảnh</button>
+      <button id="photo-link">Sao chép link</button>
+      <button id="photo-close">Đóng</button>
+    </div>
+  </section>
+
+  <svg width="0" height="0" style="position:absolute" aria-hidden="true">
+    <symbol id="i-beads" viewBox="0 0 24 24"><g class="icon"><circle cx="12" cy="9.5" r="6.5" stroke-dasharray="0.1 3.4" stroke-width="3"/><path d="M12 16v3M10 22l2-3 2 3"/></g></symbol>
+    <symbol id="i-book" viewBox="0 0 24 24"><path class="icon" d="M12 6c-2-1.6-5-2-8-1.6v14c3-.4 6 0 8 1.6 2-1.6 5-2 8-1.6v-14c-3-.4-6 0-8 1.6zM12 6v14"/></symbol>
+    <symbol id="i-rest" viewBox="0 0 24 24"><path class="icon" d="M5 9h12v5a5 5 0 0 1-5 5h-2a5 5 0 0 1-5-5zM17 10h1.5a2.5 2.5 0 0 1 0 5H17M9 3c-1 1.300 1 2 0 3.500M13 3c-1 1.300 1 2 0 3.500"/></symbol>
+    <symbol id="i-incense" viewBox="0 0 24 24"><path class="icon" d="M5 15h14l-2 6H7zM9 15V9M12 15V7M15 15V9M9 5c-1 1 1 1.500 0 2.500M15 5c-1 1 1 1.500 0 2.500M12 2c-1 1 1 1.500 0 2.500"/></symbol>
+    <symbol id="i-lantern" viewBox="0 0 24 24"><path class="icon" d="M12 3v3M8.500 6h7M7 9c0-2 2-3 5-3s5 1 5 3v6c0 2-2 3-5 3s-5-1-5-3zM12 6v12M8.500 18h7M12 18v3"/></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><path class="icon" d="M4 6a2 2 0 0 1 2-2h12a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2h-8l-4 3.500V17a2 2 0 0 1-2-2z"/></symbol>
+    <symbol id="i-map" viewBox="0 0 24 24"><path class="icon" d="M9 4 3.500 6v14L9 18l6 2 5.500-2V4L15 6zM9 4v14M15 6v14"/></symbol>
+    <symbol id="i-camera" viewBox="0 0 24 24"><g class="icon"><path d="M3 8a2 2 0 0 1 2-2h3l1.500-2h5L16 6h3a2 2 0 0 1 2 2v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><circle cx="12" cy="12.500" r="3.500"/></g></symbol>
+    <symbol id="i-music" viewBox="0 0 24 24"><g class="icon"><path d="M9 18V5l10-2v13"/><circle cx="6.500" cy="18" r="2.500"/><circle cx="16.500" cy="16" r="2.500"/></g></symbol>
+    <symbol id="i-sound" viewBox="0 0 24 24"><path class="icon" d="M4 9.500v5h3.500L12 19V5L7.500 9.500zM15.500 9a4 4 0 0 1 0 6M18 6.500a8 8 0 0 1 0 11"/></symbol>
+  </svg>
+
+  <div class="sound-buttons">
+    <button id="music" class="round" aria-label="Bật tắt nhạc nền"><svg><use href="#i-music"/></svg></button>
+    <button id="sound" class="round" aria-label="Bật tắt âm thanh"><svg><use href="#i-sound"/></svg></button>
+  </div>
+
+  <nav class="dock" aria-label="Tu tập">
+    <button id="beads-open"><svg><use href="#i-beads"/></svg>Tràng hạt</button>
+    <button id="chant-open"><svg><use href="#i-book"/></svg>Tụng kinh</button>
+    <button id="break-open"><svg><use href="#i-rest"/></svg>Giải lao</button>
+    <button id="huong"><svg><use href="#i-incense"/></svg>Thắp hương</button>
+    <button id="den"><svg><use href="#i-lantern"/></svg>Thả đèn</button>
+    <button id="chat-open"><svg><use href="#i-chat"/></svg>Trò chuyện</button>
+    <button id="map-open"><svg><use href="#i-map"/></svg>Bản đồ</button>
+    <button id="photo-open"><svg><use href="#i-camera"/></svg>Chụp ảnh</button>
+  </nav>
+  <button id="niem" class="niem">Nam mô<strong>A Di Đà</strong>Phật</button>
+  <button id="sit" class="sit" hidden>Ngồi xuống</button>
+  <button id="shoe" class="sit" hidden>Tìm dép</button>
+  <aside class="panel chat-panel" aria-label="Trò chuyện">
+    <div id="chat-log" class="chat-log" role="log" aria-live="polite">
+      <p class="chat-empty">Chưa có tin nhắn nào, chào cả chùa đi!</p>
+    </div>
+    <form id="chat" class="chat" hidden>
+      <input id="chat-text" maxlength="100" placeholder="Nói gì với cả chùa…" autocomplete="off" aria-label="Tin nhắn">
+      <button type="submit">Gửi</button>
+    </form>
+  </aside>
+  <p id="error" class="error" hidden>Trình duyệt này chưa chạy được đồ họa 3D.</p>
+
+  <script type="module" src="/js/game/main.js"></script>
+</body>
+</html>

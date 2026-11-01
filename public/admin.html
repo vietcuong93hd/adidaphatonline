@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Điều khiển live</title>
+  <style>
+    body { max-width: 440px; margin: 40px auto; padding: 0 16px; font-family: 'Segoe UI', Arial, sans-serif; }
+    label { display: block; margin-bottom: 12px; }
+    input { display: block; width: 100%; padding: 8px; box-sizing: border-box; }
+    button { padding: 10px 14px; margin: 0 8px 8px 0; }
+    section { margin-top: 28px; }
+  </style>
+</head>
+<body>
+  <h1>Điều khiển live</h1>
+  <p>
+    Niệm: <strong id="total-niem">0</strong> ·
+    Hương: <strong id="total-huong">0</strong> ·
+    Đèn: <strong id="total-den">0</strong>
+  </p>
+  <p id="message" role="status"></p>
+
+  <label>Tên người xem <input id="user" value="Bạn thử nghiệm" maxlength="40"></label>
+
+  <section>
+    <h2>Nghi thức</h2>
+    <label>Số câu niệm hoặc số nén hương <input id="count" type="number" value="1" min="1" max="108"></label>
+    <label>Lời nguyện trên đèn <input id="wish" value="Cầu gia đình bình an" maxlength="80"></label>
+    <button data-type="niem">Niệm Phật</button>
+    <button data-type="huong">Thắp hương</button>
+    <button data-type="den">Thả đèn</button>
+  </section>
+
+  <section>
+    <h2>Thử bình luận</h2>
+    <label>Nội dung <input id="comment" value="Nam mô A Di Đà Phật" maxlength="150"></label>
+    <button id="send-comment">Gửi bình luận</button>
+  </section>
+
+  <section>
+    <button id="reset">Đặt lại bộ đếm</button>
+  </section>
+
+  <script>
+    const value = (id) => document.getElementById(id).value;
+    const messageEl = document.getElementById('message');
+
+    function showState(state) {
+      for (const [id, key] of [['total-niem', 'totalNiem'], ['total-huong', 'totalHuong'], ['total-den', 'totalDen']]) {
+        document.getElementById(id).textContent = state[key].toLocaleString('vi-VN');
+      }
+    }
+
+    async function post(url, body) {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body || {})
+      });
+      const data = await res.json();
+      messageEl.textContent = data.error || '';
+      showState(data.state || data);
+    }
+
+    document.querySelectorAll('[data-type]').forEach((button) => {
+      button.addEventListener('click', () => {
+        post('/api/ritual', {
+          type: button.dataset.type,
+          user: value('user'),
+          count: value('count'),
+          wish: value('wish')
+        });
+      });
+    });
+
+    document.getElementById('send-comment').addEventListener('click', () => {
+      post('/api/comment', { user: value('user'), text: value('comment') });
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      if (confirm('Đặt lại bộ đếm về 0?')) post('/api/reset');
+    });
+
+    fetch('/api/state').then((res) => res.json()).then(showState);
+  </script>
+</body>
+</html>
