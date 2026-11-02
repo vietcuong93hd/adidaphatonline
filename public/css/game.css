@@ -622,3 +622,31 @@ body.focus-mode .hint { display: none; }
   text-align: center;
 }
 .error[hidden] { display: none; }
+
+/* Trải nghiệm đón khách, ưu tiên điện thoại và không che game khi đã đóng */
+.welcome-overlay,.journey-overlay{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:20px;background:rgba(15,10,7,.78);backdrop-filter:blur(7px);overflow:auto}
+.welcome-overlay[hidden],.journey-overlay[hidden],.journey-trigger[hidden],.journey-finish[hidden],#journey-link[hidden]{display:none!important}
+.welcome-card,.journey-card{width:min(100%,490px);max-height:calc(100dvh - 40px);overflow:auto;padding:clamp(22px,5vw,34px);border:1px solid rgba(240,198,117,.5);border-radius:24px;background:linear-gradient(145deg,#4e2517,#21130e 72%);box-shadow:0 24px 80px rgba(0,0,0,.65);text-align:left}
+.welcome-kicker{display:block;color:#f0c675;font-size:12px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}
+.welcome-card h1,.journey-card h2{margin:10px 0 14px;font-family:var(--heading);font-size:clamp(25px,6vw,37px);line-height:1.15;color:#ffe2a2}
+.welcome-card p,.journey-card p{font-size:15px;line-height:1.6}
+.welcome-chips{display:flex;flex-wrap:wrap;gap:8px;margin:19px 0 25px}
+.welcome-chips span{padding:7px 10px;border-radius:18px;background:rgba(255,255,255,.08);font-size:12px}
+.journey-primary{display:block;width:100%;min-height:52px;border:0;border-radius:14px;background:linear-gradient(#f8d997,#daa448);color:#351c0d;font-weight:800}
+.journey-quiet{display:block;width:100%;padding:15px 5px;background:transparent;border:0}
+.welcome-card .welcome-disclosure,.journey-card .welcome-disclosure{margin-top:16px;font-size:12px;color:#d7bf9c}
+.journey-trigger{position:fixed;top:calc(max(10px,env(safe-area-inset-top)) + 150px);right:10px;z-index:3;max-width:180px;padding:10px 13px;border:1px solid var(--line);border-radius:20px;background:var(--panel);font-size:12px;color:var(--gold);box-shadow:var(--lift)}
+.journey-head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+.journey-head h2{font-size:26px}
+#journey-close{width:40px;height:40px;flex-shrink:0;border:1px solid var(--line);border-radius:50%;background:rgba(255,255,255,.06);font-size:25px}
+#journey-progress{margin-bottom:12px;color:#f0c675}
+.journey-steps{display:grid;gap:10px}
+.journey-steps button{display:flex;align-items:center;gap:14px;width:100%;padding:14px;text-align:left;border:1px solid rgba(240,198,117,.35);border-radius:14px;background:rgba(0,0,0,.17)}
+.journey-steps button.completed{border-color:#a5c8a4;background:rgba(82,146,82,.16)}
+.journey-steps button .journey-tick{flex-shrink:0;font-size:25px;color:#f0c675}
+.journey-steps strong,.journey-steps small{display:block}
+.journey-steps strong{font-size:15px}
+.journey-steps small{margin-top:3px;font-size:12px;line-height:1.45;color:#dfc8b3}
+.journey-finish{margin-top:14px;color:#aed9a5}
+#journey-link{width:100%;margin-top:12px;padding:12px;border:1px solid var(--line);border-radius:10px;background:#21130e;color:var(--text)}
+@media(max-width:699px){.journey-trigger{top:auto;right:10px;bottom:calc(var(--dock-bottom) + 210px);font-size:11px;padding:9px 10px}.welcome-overlay,.journey-overlay{padding:12px}.welcome-card,.journey-card{max-height:calc(100dvh - 24px);padding:22px}}
