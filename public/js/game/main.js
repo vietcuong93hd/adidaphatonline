@@ -29,6 +29,7 @@ import {
 import { createMusicPanel } from './musicPanel.js';
 import { createCalendar } from './calendar.js';
 import { createHeadHalo } from './headHalo.js';
+import { createJourney } from './journey.js';
 
 const WALK_SPEED = 5;
 const PLAYER_RADIUS = 0.6;
@@ -117,6 +118,7 @@ function sitIfNear() {
   if (nearCushion) sittingOn = nearCushion;
 }
 const practice = createPractice({ onNiem: sendNiem, onSit: sitIfNear });
+const journey = createJourney({ onMessage: showToast });
 
 function openFocus(panel) {
   sitIfNear();
@@ -278,6 +280,7 @@ function handleMessage(message) {
       // Tràng hạt và tụng kinh đã có tiếng riêng lúc bấm
       if (!document.body.classList.contains('focus-mode')) playWoodblock();
       practice.recordOwnNiem();
+      journey.complete('niem');
     } else {
       others.pulse(message.id);
     }
