@@ -11,6 +11,32 @@
 </head>
 <body>
   <canvas id="scene"></canvas>
+  <section id="welcome-cover" class="welcome-overlay" aria-label="Lời chào đầu tiên" hidden>
+    <div class="welcome-card" role="dialog" aria-modal="true" aria-labelledby="welcome-title">
+      <span class="welcome-kicker">Một khoảng lặng giữa ngày bận rộn</span>
+      <h1 id="welcome-title">Ghé chùa một chút, nhẹ lòng một chút.</h1>
+      <p>Hóa thân thành linh vật văn phòng, dạo chùa 3D, niệm một câu an lành và rủ đồng nghiệp cùng tham gia.</p>
+      <div class="welcome-chips"><span>🌿 Không cần đăng ký</span><span>⏳ Chỉ 30 giây</span><span>📱 Chơi trên điện thoại</span></div>
+      <button id="welcome-go" class="journey-primary">Bắt đầu hành trình</button>
+      <button id="welcome-skip" class="journey-quiet">Để tôi tự khám phá</button>
+      <p class="welcome-disclosure">Trong chùa có các linh vật mô phỏng để tạo không khí. Số lượng hiển thị không nhất thiết là người thật.</p>
+    </div>
+  </section>
+  <button id="journey-trigger" class="journey-trigger" hidden>🌿 Làm quen 0/3</button>
+  <section id="journey-cover" class="journey-overlay" aria-label="Hành trình làm quen" hidden>
+    <div class="journey-card" role="dialog" aria-modal="true" aria-labelledby="journey-title">
+      <div class="journey-head"><div><span class="welcome-kicker">Hành trình 30 giây</span><h2 id="journey-title">Ba việc nhỏ để bắt đầu</h2></div><button id="journey-close" aria-label="Đóng hướng dẫn">×</button></div>
+      <p id="journey-progress" aria-live="polite">0/3 bước đã hoàn thành</p>
+      <div class="journey-steps">
+        <button data-journey="avatar" data-label="Chọn linh vật"><span class="journey-tick">○</span><span><strong>1. Chọn linh vật của bạn</strong><small>Trâu cày, Mãng xà, Lươn chúa… bạn giống ai?</small></span></button>
+        <button data-journey="niem" data-label="Niệm một câu"><span class="journey-tick">○</span><span><strong>2. Niệm một câu an lành</strong><small>Chạm nút niệm, máy chủ sẽ ghi nhận.</small></span></button>
+        <button data-journey="invite" data-label="Mời bạn cùng ghé"><span class="journey-tick">○</span><span><strong>3. Mời đồng nghiệp cùng ghé</strong><small>Chia sẻ liên kết qua ứng dụng bạn muốn.</small></span></button>
+      </div>
+      <p id="journey-finish" class="journey-finish" hidden>✨ Hoàn thành! Cứ thong thả khám phá chùa nhé.</p>
+      <input id="journey-link" type="text" aria-label="Liên kết để sao chép" readonly hidden>
+      <p class="welcome-disclosure">Có linh vật mô phỏng tự động; chúng không được tính vào lượt niệm thật.</p>
+    </div>
+  </section>
 
   <details id="profile" class="panel top">
     <summary id="form-title" class="form-title"></summary>
